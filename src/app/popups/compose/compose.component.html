@@ -1,0 +1,43 @@
+<div class="fl-column gap-1">
+  <div class="fl-column gap-1" [formGroup]="form">
+    <input
+      pInputText
+      placeholder="To"
+      formControlName="to"
+      [style]="{ width: '100%' }"
+    />
+
+    <input
+      pInputText
+      placeholder="Subject"
+      formControlName="subject"
+      [style]="{ width: '100%' }"
+    />
+
+    <p-editor
+      formControlName="message"
+      [style]="{ height: '320px' }"
+    ></p-editor>
+  </div>
+  <p-footer>
+    <div class="fl-row gap-1">
+      <button
+        pButton
+        type="button"
+        label="Send"
+        (click)="send()"
+        [disabled]="!form.valid"
+      >
+        <fa-icon [icon]="faPaperPlane"></fa-icon>
+      </button>
+      <button
+        pButton
+        type="button"
+        label="Cancel"
+        class="p-button-danger"
+        (click)="cancel()"
+      >
+        <fa-icon [icon]="faTrash"></fa-icon>
+      </button></div
+  ></p-footer>
+</div>

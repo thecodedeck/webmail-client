@@ -1,0 +1,241 @@
+<!-- Login View -->
+<div class="login-wrapper fl-column fl-full-center" *ngIf="showLogin$ | async">
+  <form
+    class="login-container fl-column gap-1 fl-full-center"
+    (submit)="login()"
+    [formGroup]="loginForm"
+  >
+    <h1 class="title">Login</h1>
+    <div class="fl-column gap-1">
+      <input
+        type="text"
+        placeholder="User"
+        formControlName="user"
+        class="input"
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        formControlName="password"
+        class="input"
+      />
+    </div>
+    <button type="submit" class="login-btn">Login</button>
+  </form>
+</div>
+
+<!-- Mailbox view -->
+<div class="wrapper fl-row" *ngIf="!(showLogin$ | async)">
+  <!-- Folders -->
+  <div class="folders fl-column fl-full-center">
+    <div class="folder-container fl-column gap-1">
+      <button
+        type="button"
+        (click)="getEmails('INBOX')"
+        [class.selected]="selectedFolder === 'INBOX'"
+      >
+        <fa-icon [icon]="faInbox"></fa-icon>
+      </button>
+
+      <button
+        type="button"
+        (click)="getEmails('Sent')"
+        [class.selected]="selectedFolder === 'Sent'"
+      >
+        <fa-icon [icon]="faPaperPlane"></fa-icon>
+      </button>
+
+      <button
+        type="button"
+        (click)="getEmails('Trash')"
+        [class.selected]="selectedFolder === 'Trash'"
+      >
+        <fa-icon [icon]="faTrash"></fa-icon>
+      </button>
+
+      <!-- Logout -->
+      <button type="button" class="logout-btn" (click)="logout()">
+        <fa-icon [icon]="faSignOutAlt"></fa-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Messages Column -->
+  <div class="column-1 fl-column">
+    <!-- Header -->
+    <div class="header fl-row fl-full-center gap-1">
+      <button type="button" (click)="refreshEmails()" class="refresh-btn">
+        <fa-icon [icon]="faSync"></fa-icon>
+      </button>
+
+      <div class="fl-row gap-05">
+        <fa-icon class="icon" [icon]="faInbox" size="lg"></fa-icon>
+        <span class="title"> {{ selectedFolder }} ({{ user }}) </span>
+      </div>
+
+      <button type="button" (click)="toggleCompose()" class="compose-btn">
+        <fa-icon [icon]="faPen"></fa-icon>
+      </button>
+    </div>
+
+    <!-- Messages -->
+    <div class="body fl-column">
+      <div class="messages fl-column" *ngIf="!loading">
+        <div
+          *ngFor="let email of emails"
+          class="message fl-column"
+          [class.active]="selectedEmail === email"
+          (click)="selectEmail(email)"
+          [class.seen]="email.seen"
+        >
+          <!-- From -->
+          <div class="fl-row fl-align-center from">
+            <!-- Profile Picture -->
+            <div class="profile-picture">
+              <img alt="profile-picture" src="assets/images/profile.svg" />
+            </div>
+
+            <span>{{ email.from }}</span>
+          </div>
+
+          <!-- Subject & Preview -->
+          <span class="subject">{{ email.subject }}</span>
+          <span class="preview">{{ email.text | truncate }}</span>
+
+          <!-- Action Buttons -->
+          <div class="fl-row action-buttons">
+            <!-- Mark seen or unseen switch -->
+            <button
+              type="button"
+              (click)="
+                email.seen
+                  ? markAsUnread(email, $event)
+                  : markAsRead(email, $event)
+              "
+            >
+              <fa-icon [icon]="email.seen ? faEye : faEyeSlash"></fa-icon>
+            </button>
+
+            <!-- Remove from trash -->
+            <button
+              type="button"
+              *ngIf="selectedFolder === 'Trash'"
+              (click)="removeFromTrash(email, $event)"
+            >
+              <fa-icon [icon]="faTrashRestore"></fa-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paginator -->
+    <div class="footer fl-row fl-full-center">
+      <p-paginator
+        [rows]="perPage"
+        [totalRecords]="totalMessages"
+        [pageLinkSize]="3"
+        [rowsPerPageOptions]="[10, 20, 30]"
+        (rowsPerPageChange)="paginate({ page: 0, rows: $event })"
+        (onPageChange)="paginate($event)"
+        dropdownAppendTo="body"
+      ></p-paginator>
+    </div>
+
+    <!-- Spinner -->
+    <div class="fl-column fl-full-center spinner-wrapper" *ngIf="loading">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- Message View -->
+  <div class="column-2 fl-column" *ngIf="selectedEmail.subject?.length">
+    <!-- Header -->
+    <div class="header fl-column fl-justify-center gap-1">
+      <div class="fl-row subject">
+        <div class="profile-picture">
+          <img alt="profile-picture" src="assets/images/profile.svg" />
+        </div>
+
+        <h1>
+          {{ selectedEmail.subject }}
+        </h1>
+      </div>
+      <div class="from">
+        <label>From: </label>
+        <span>{{ selectedEmail.from }}</span>
+      </div>
+
+      <div class="to">
+        <label>To: </label>
+        <span>{{ selectedEmail.to }}</span>
+      </div>
+
+      <div class="date">
+        <label>Date: </label>
+        <span>{{ selectedEmail.date | date : "medium" }}</span>
+      </div>
+    </div>
+
+    <!-- Message Body -->
+    <div class="fl-column body-container">
+      <div
+        class="body"
+        *ngIf="selectedEmail.html"
+        [innerHTML]="allowHTML ? selectedEmail.html : selectedEmail.text"
+      ></div>
+    </div>
+
+    <!-- Footer Buttons -->
+    <div class="footer fl-row gap-1" *ngIf="!replying">
+      <p-selectButton
+        [options]="emailDisplayOptions"
+        [(ngModel)]="allowHTML"
+        optionLabel="label"
+        optionValue="value"
+      ></p-selectButton>
+
+      <!-- Delete Button -->
+      <button
+        pButton
+        type="button"
+        label="Delete"
+        class="p-button-danger"
+        (click)="moveToTrash()"
+      >
+        <fa-icon [icon]="faTrash"></fa-icon>
+      </button>
+
+      <!-- Reply Button -->
+      <button pButton type="button" label="Reply" (click)="toggleReply()">
+        <fa-icon [icon]="faReply"></fa-icon>
+      </button>
+    </div>
+
+    <!-- Reply form -->
+    <div class="editor-container fl-column gap-1" *ngIf="replying">
+      <p-editor
+        [(ngModel)]="reply"
+        #editor
+        [style]="{ height: '320px' }"
+        placeholder="Enter your message here..."
+      ></p-editor>
+
+      <div class="fl-row gap-1 editor-footer">
+        <button pButton type="button" label="Send" (click)="sendReply()">
+          <fa-icon [icon]="faPaperPlane"></fa-icon>
+        </button>
+        <button
+          pButton
+          type="button"
+          label="Cancel"
+          class="p-button-danger"
+          (click)="toggleReply()"
+        >
+          <fa-icon [icon]="faTimes"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>

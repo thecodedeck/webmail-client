@@ -1,0 +1,339 @@
+.login-wrapper {
+  width: 100%;
+  height: 100svh;
+
+  background-color: var(--background-color-1);
+
+  input {
+    width: 100%;
+    height: 3rem;
+
+    padding: 1rem;
+
+    border: none;
+    border-radius: 0.5rem;
+
+    background-color: var(--background-color-2);
+
+    color: white;
+
+    &::placeholder {
+      color: var(--text-color-2);
+    }
+  }
+
+  button {
+    width: 100%;
+    height: 3rem;
+
+    border: none;
+    border-radius: 0.5rem;
+
+    background-color: var(--button-color-normal);
+
+    font-weight: bold;
+
+    color: white;
+
+    cursor: pointer;
+
+    transition: background-color 0.15s ease-in-out;
+
+    &:hover {
+      background-color: var(--button-color-highlight);
+    }
+  }
+}
+
+.wrapper {
+  box-sizing: border-box;
+  background-color: var(--background-color-1);
+
+  width: 100%;
+  height: 100svh;
+
+  .folders {
+    padding: 1rem;
+    border-right: 1px solid var(--border-color-1);
+
+    .folder-container {
+      button {
+        width: 3rem;
+        height: 3rem;
+
+        background-color: var(--button-color-normal);
+
+        border-radius: 1rem;
+
+        border: none;
+
+        cursor: pointer;
+
+        transition: background-color 0.15s ease-in-out;
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &.selected {
+          background-color: var(--button-color-highlight);
+        }
+
+        &.logout-btn {
+          position: absolute;
+          background-color: transparent;
+          bottom: 1rem;
+          left: 1rem;
+        }
+      }
+    }
+  }
+
+  .column-1 {
+    width: 500px;
+    min-width: 500px;
+
+    height: 100%;
+
+    box-sizing: border-box;
+
+    border-right: 1px solid var(--border-color-1);
+
+    position: relative;
+
+    .spinner-wrapper {
+      width: 100%;
+      height: 100%;
+
+      position: absolute;
+
+      .spinner {
+        animation: spin 1s linear infinite;
+        border: 0.5rem solid var(--button-color-normal);
+        border-radius: 50%;
+        border-top: 0.5rem solid #141414;
+        width: 3rem;
+        height: 3rem;
+        margin: auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    }
+
+    .body {
+      height: 100%;
+      overflow: hidden;
+      box-sizing: border-box;
+
+      .messages {
+        overflow: auto;
+
+        .message {
+          font-weight: bold;
+          font-size: 1rem;
+
+          border-bottom: 1px solid var(--border-color-1);
+
+          padding: 2rem;
+          box-sizing: border-box;
+
+          cursor: pointer;
+
+          transition: background-color 0.15s ease-in-out;
+          will-change: background-color;
+
+          &.seen {
+            opacity: 0.5;
+          }
+
+          .from {
+            font-size: 0.8rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+          }
+
+          .preview {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            font-weight: normal;
+
+            margin-top: 0.5rem;
+          }
+
+          .action-buttons {
+            margin-top: 1rem;
+
+            button {
+              background-color: transparent;
+              color: white;
+              border: none;
+
+              cursor: pointer;
+
+              &.delete {
+                margin-right: 0.5rem;
+              }
+            }
+          }
+
+          &.active,
+          &:hover {
+            background-color: var(--background-color-2);
+          }
+
+          .profile-picture {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: white;
+            margin-right: 1rem;
+
+            img {
+              width: 100%;
+              aspect-ratio: 1;
+              object-fit: cover;
+            }
+          }
+        }
+      }
+    }
+
+    .footer {
+      border-top: 1px solid var(--border-color-1);
+    }
+
+    .header {
+      min-height: 6rem;
+
+      padding: 0 2rem;
+
+      position: relative;
+      justify-content: space-between;
+
+      border-bottom: 1px solid var(--border-color-1);
+
+      .title {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      button {
+        width: 2rem;
+        height: 2rem;
+        background-color: transparent;
+        color: white;
+        border: none;
+        border-radius: 0.25rem;
+
+        cursor: pointer;
+      }
+    }
+  }
+
+  .column-2 {
+    flex: 1;
+    height: auto;
+    overflow-y: auto;
+
+    background-color: var(--background-color-3);
+
+    min-width: 500px;
+    height: 100%;
+
+    box-sizing: border-box;
+
+    .header {
+      gap: 0.5rem;
+
+      border-bottom: 1px solid var(--border-color-1);
+
+      padding: 2rem;
+
+      .subject {
+        margin-bottom: 1rem;
+
+        h1 {
+          font-size: 2rem;
+          font-weight: bold;
+
+          margin-left: 1rem;
+        }
+
+        .profile-picture {
+          width: 3rem;
+          height: 3rem;
+          border-radius: 50%;
+          overflow: hidden;
+          background-color: white;
+          margin-right: 1rem;
+
+          img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+          }
+        }
+      }
+
+      span {
+        font-size: 1rem;
+        font-weight: bold;
+      }
+
+      label {
+        font-size: 1rem;
+        font-weight: normal;
+        opacity: 0.8;
+        margin-right: 0.5rem;
+      }
+    }
+
+    .body-container {
+      box-sizing: border-box;
+
+      flex: 1;
+      width: 100%;
+
+      .body {
+        width: 100%;
+        height: 100%;
+        flex: 1;
+        overflow-y: auto;
+
+        padding: 2rem;
+
+        border-radius: 2rem;
+      }
+    }
+
+    .footer {
+      width: 100%;
+      margin-left: auto;
+      padding: 2rem;
+
+      justify-content: end;
+
+      p-selectButton {
+        margin-right: auto;
+      }
+    }
+
+    .editor-container {
+      padding: 2rem;
+
+      .editor-footer {
+        justify-content: end;
+      }
+    }
+  }
+}

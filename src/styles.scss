@@ -1,0 +1,73 @@
+@import "primeng/resources/themes/md-dark-indigo/theme.css";
+@import "primeng/resources/primeng.css";
+@import "quill/dist/quill.snow.css";
+
+@import "css/theme-variables.scss";
+@import "css/theme-overrides.scss";
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  padding: 0;
+  margin: 0;
+}
+
+.fl-row {
+  display: flex;
+}
+
+.fl-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.gap-2 {
+  gap: 2rem;
+}
+
+.gap-1 {
+  gap: 1rem;
+}
+
+.gap-05 {
+  gap: 0.5rem;
+}
+
+html,
+body {
+  height: auto;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  color: rgb(255, 255, 255);
+  background-color: rgb(32, 32, 32);
+}
+
+.fl-full-center {
+  justify-content: center;
+  align-items: center;
+}
+
+.fl-align-center {
+  align-items: center;
+}
+
+.fl-justify-center {
+  justify-content: center;
+}
+
+// make scrollbar background transparent and handle black
+::-webkit-scrollbar {
+  width: 0.5rem;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+}
